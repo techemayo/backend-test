@@ -3,8 +3,18 @@ import { getUser } from "./userAPI";
 
 const initialState = {
   user: "",
-  staus: "idle",
+  status: "idle",
 };
+export const requestUser = createAsyncThunk(
+  'user/requestUser', 
+async () => {
+  try{
+    return getUser();
+  }catch(error){
+    throw Error(error);
+  }
+}
+)
 
 export const userSlice = createSlice({
   name: "user",
@@ -24,6 +34,10 @@ export const userSlice = createSlice({
       .addCase(requestUser.fulfilled, (state, action) => {
         state.status = "idle";
         state.user = action.payload;
+      })
+      .addCase(requestUser.rejected, (state, action) => {
+        state.status = "idle";
+        console.log(action.payload)
       });
   },
 });

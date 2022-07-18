@@ -23,3 +23,10 @@
 .user__right li {
   margin-bottom: 0.25em;
 }
+.fetch-button {
+  padding: 10px;
+  font-size: 1em;
+  background-color:#cdcdcd;
+  font-weight: bold;
+  border-radius: 5px;
+}

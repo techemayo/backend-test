@@ -1,54 +1,56 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch } from 'react-redux';
+import { requestUser, addUser } from "./userSlice";
 import "./user.css";
-
-import axios from "axios";
+import { useSelector } from 'react-redux';
+import LoadingSpinner from "../spinner/LoadingSpinner";
 
 function User() {
-  const [user, setUser] = useState("");
+    const dispatch = useDispatch();
+    const user = useSelector(state => state.user.user);
+    const status = useSelector(state => state.user.status);
 
   useEffect(() => {
-    const options = {
-      method: "GET",
-      url: `https://randomuser.me/api/`,
-    };
-    axios
-      .request(options)
-      .then((response) => {
-        setUser(response.data.results[0]);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    dispatch(requestUser());
   }, []);
 
   const renderUser = () => {
+    if(status==="loading"){
+        return (LoadingSpinner())
+    }else{
     return (
       <>
         <div className="user__left">
-          <img src={user.picture.large} alt="" />
+          <img src={user?user.picture.large:""} alt="" />
         </div>
         <div className="user__right">
           {
             <ul>
               <li>
                 <h1>
-                  {user.name.first} {user.name.last}
+                  {user?user.name.first:"NA"} {user?user.name.last:"NA"}
                 </h1>
               </li>
               <li>
-                <h3>Email: {user.email}</h3>
+                <h3>Email: {user?user.email:"NA"}</h3>
               </li>
               <li>
-                <h3>Phone: {user.phone}</h3>
+                <h3>Phone: {user?user.phone:"NA"}</h3>
               </li>
               <li>
-                <h3>City: {user.location.city}</h3>
+                <h3>City: {user?user.location.city:"NA"}</h3>
               </li>
             </ul>
           }
+            <ul>
+              <li>
+              <button className="fetch-button" onClick={()=>{dispatch(requestUser())}} >Fetch Random User</button>
+              </li>
+            </ul>
         </div>
       </>
     );
+}
   };
 
   return <div className="user">{renderUser()}</div>;
